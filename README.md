@@ -14,9 +14,9 @@ Synthetic dataset containing:
 - **20 marketing campaigns** across 5 channels
 - **Financial indicators** for each customer
 Dataset generated with realistic distributions for:
-- ***Customers Table*** - Customer age, occupation, education
-- ***Campaigns Table*** - Campaign types (email, telemarketing, etc.)
-- ***Financials Table*** - Economic factors (employment rate, consumer confidence)
+   ****Customers Table**** - Customer age, occupation, education
+   ****Campaigns Table**** - Campaign types (email, telemarketing, etc.)
+   ****Financials Table**** - Economic factors (employment rate, consumer confidence)
 
 ## 📊 Data Dictionary
 
