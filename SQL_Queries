@@ -1,0 +1,142 @@
+# 📜 SQL Queries for Bank Marketing Analysis
+
+## 🏷️ Table of Contents
+1. [Campaign Effectiveness](#-campaign-effectiveness)
+2. [Customer Segmentation](#-customer-segmentation)
+3. [Financial Insights](#-financial-insights)
+4. [Economic Indicators](#-economic-indicators)
+5. [Predictive Factors](#-predictive-factors)
+
+---
+
+## 🎯 Campaign Effectiveness
+
+### 1. Overall Success by Campaign Type
+```sql
+SELECT 
+    campaign_type,
+    COUNT(*) AS total_campaigns,
+    SUM(CASE WHEN outcome = 'yes' THEN 1 ELSE 0 END) AS successful_campaigns,
+    ROUND(SUM(CASE WHEN outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS success_rate,
+    AVG(duration) AS avg_duration_seconds
+FROM campaigns
+GROUP BY campaign_type
+ORDER BY success_rate DESC;
+```
+
+### 2. Monthly Trends
+```sql
+SELECT 
+    c.month,
+    COUNT(*) AS total_campaigns,
+    ROUND(SUM(CASE WHEN ca.outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS success_rate
+FROM campaigns ca
+JOIN customers c ON ca.customer_id = c.customer_id
+GROUP BY c.month
+ORDER BY FIELD(c.month, 'jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec');
+```
+
+---
+
+## 👥 Customer Segmentation
+
+### 1. Age Group Performance
+```sql
+SELECT 
+    CASE 
+        WHEN age < 30 THEN 'Under 30'
+        WHEN age BETWEEN 30 AND 45 THEN '30-45'
+        WHEN age BETWEEN 46 AND 60 THEN '46-60'
+        ELSE 'Over 60'
+    END AS age_group,
+    COUNT(*) AS total_customers,
+    ROUND(SUM(CASE WHEN ca.outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS success_rate
+FROM customers c
+JOIN campaigns ca ON c.customer_id = ca.customer_id
+GROUP BY age_group
+ORDER BY success_rate DESC;
+```
+
+### 2. Top Job/Education Segments
+```sql
+SELECT 
+    job, 
+    education,
+    COUNT(*) AS total_customers,
+    ROUND(SUM(CASE WHEN ca.outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS conversion_rate
+FROM customers c
+JOIN campaigns ca ON c.customer_id = ca.customer_id
+GROUP BY job, education
+HAVING COUNT(*) > 30
+ORDER BY conversion_rate DESC
+LIMIT 10;
+```
+
+---
+
+## 💰 Financial Insights
+
+### 1. Balance Quartile Analysis
+```sql
+WITH balance_quartiles AS (
+    SELECT 
+        customer_id,
+        balance,
+        NTILE(4) OVER (ORDER BY balance) AS quartile
+    FROM financials
+)
+SELECT 
+    quartile,
+    MIN(balance) AS min_balance,
+    MAX(balance) AS max_balance,
+    COUNT(*) AS total_customers,
+    ROUND(SUM(CASE WHEN ca.outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS success_rate
+FROM balance_quartiles b
+JOIN campaigns ca ON b.customer_id = ca.customer_id
+GROUP BY quartile
+ORDER BY quartile;
+```
+
+---
+
+## 📈 Economic Indicators
+
+### 1. Correlation Analysis
+```sql
+SELECT 
+    ROUND(AVG(emp_var_rate), 2) AS avg_employment_variation,
+    ROUND(AVG(cons_conf_idx), 2) AS avg_consumer_confidence,
+    ROUND(SUM(CASE WHEN outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS success_rate
+FROM financials f
+JOIN campaigns ca ON f.customer_id = ca.customer_id
+GROUP BY YEAR(campaign_date)
+ORDER BY YEAR(campaign_date);
+```
+
+---
+
+## 🔮 Predictive Factors
+
+### 1. Lift Analysis
+```sql
+SELECT 
+    'Age > 60' AS factor,
+    ROUND(SUM(CASE WHEN c.age > 60 AND ca.outcome = 'yes' THEN 1 ELSE 0 END) * 100.0 / 
+          SUM(CASE WHEN c.age > 60 THEN 1 ELSE 0 END), 2) AS success_rate,
+    ROUND((SUM(CASE WHEN c.age > 60 AND ca.outcome = 'yes' THEN 1 ELSE 0 END) / 
+          SUM(CASE WHEN c.age > 60 THEN 1 ELSE 0 END)) /
+          (SUM(CASE WHEN c.age <= 60 AND ca.outcome = 'yes' THEN 1 ELSE 0 END) / 
+          SUM(CASE WHEN c.age <= 60 THEN 1 ELSE 0 END)), 2) AS lift_over_average
+FROM customers c
+JOIN campaigns ca ON c.customer_id = ca.customer_id;
+```
+
+---
+
+## 🛠️ Indexing Recommendations
+```sql
+-- Improve query performance
+CREATE INDEX idx_campaign_outcome ON campaigns(outcome);
+CREATE INDEX idx_customer_age_job ON customers(age, job);
+CREATE INDEX idx_financial_balance ON financials(balance);
+```
