@@ -63,7 +63,7 @@ Dataset generated with realistic distributions for:
 
 ## 🔍 Analysis Highlights
 
-## 🔍 Key Findings
+### Key Findings
 
 ### 🎯 **Top-Performing Segments**
 | Segment | Conversion Rate | Lift vs Avg |
