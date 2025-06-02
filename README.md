@@ -79,8 +79,8 @@ Dataset generated with realistic distributions for:
 - **Worst month**: Sep (16.93%)  
 
 ### 💰 **Financial Insights**
-- **Negative balances (-€5k to -€3.3k) convert at 20.4%** (likely debt consolidation seekers)  
-- **Wealthiest customers (€3k+ balance)**: 21.04% conversion  
+- **Negative balances (-$5k to -$3.3k) convert at 20.4%** (likely debt consolidation seekers)  
+- **Wealthiest customers ($3k+ balance)**: 21.04% conversion  
 
 ### 📈 **Predictive Factors**
 1. **In-branch execution** (1.90× lift)  
