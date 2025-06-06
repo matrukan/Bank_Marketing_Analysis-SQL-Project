@@ -5,7 +5,7 @@ This project analyzes the effectiveness of a bank's marketing campaigns for term
 ## 🛠️ Technologies Used
 - **Database**: MySQL
 - **Data Generation**: Python (Faker, Pandas)
-- **Visualization**: Matplotlib/Seaborn (or specify if you used Tableau/Power BI)
+- **Visualization**: Matplotlib/Seaborn 
 - **Version Control**: Git/GitHub
 
 ## 📂 Dataset
